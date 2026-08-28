@@ -1,0 +1,19 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Registrations: Anyone can create, only admins can read/update/delete
+    match /registrations/{registrationId} {
+      allow create: if request.resource.data.keys().hasAll(['name', 'email', 'phone', 'timestamp'])
+        && request.resource.data.name is string
+        && request.resource.data.name.size() > 0
+        && request.resource.data.email is string
+        && request.resource.data.email.matches('^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$')
+        && request.resource.data.phone is string
+        && request.resource.data.phone.size() == 10;
+      
+      // Only authenticated users (admins) may read registrations
+      allow read, update, delete: if request.auth != null;
+    }
+  }
+}
