@@ -13,11 +13,11 @@ const PORT = process.env.PORT || 5000;
 // Enable Middlewares
 const corsOptions = {
   origin: function (origin, callback) {
-    // Allow requests with no origin (e.g. curl, Postman) or from localhost
-    if (!origin || origin.includes('localhost') || origin.includes('127.0.0.1')) {
+    // Allow requests with no origin (Postman, curl) or any production web origin
+    if (!origin || origin.includes('localhost') || origin.includes('127.0.0.1') || origin.includes('onrender.com') || process.env.NODE_ENV === 'production') {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      callback(null, true); // Permissive CORS for public event registration API
     }
   },
   methods: ['GET', 'POST', 'OPTIONS'],
