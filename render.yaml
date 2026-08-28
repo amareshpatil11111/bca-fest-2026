@@ -1,8 +1,8 @@
 services:
-  # Node.js Express Backend Service
+  # 1. Node.js Express Backend Web Service
   - type: web
     name: bca-fest-backend
-    env: node
+    runtime: node
     rootDir: backend
     buildCommand: npm install
     startCommand: npm start
@@ -12,3 +12,13 @@ services:
         sync: false
       - key: SUPABASE_KEY
         sync: false
+
+  # 2. Flutter Web Frontend Static Site
+  - type: web
+    name: bca-fest-frontend
+    runtime: static
+    staticPublishPath: ./build/web
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
